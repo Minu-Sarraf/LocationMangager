@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LocInterface, Vie
 
 
     @Override
+
     protected void onResume() {
         super.onResume();
         //Now lets connect to the API
