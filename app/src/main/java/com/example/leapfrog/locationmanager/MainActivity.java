@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements LocInterface, Vie
 
     @Override
     public void onClick(View view) {
-        Log.e("click","click");
         GetLocation l = new GetLocation(MainActivity.this);
         l.callForLocation();
     }
