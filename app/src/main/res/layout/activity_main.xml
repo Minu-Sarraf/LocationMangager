@@ -9,7 +9,7 @@
         android:layout_width="80dp"
         android:id="@+id/button"
         android:layout_height="80dp"
-        android:text="Click Me!"
+        android:text="@string/buttonClick"
         android:gravity="center" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.example.leapfrog.locationmanager;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
@@ -14,47 +13,57 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class GetLocation implements GoogleApiClient.ConnectionCallbacks,
+public class GLocation implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-    private GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    double currentLatitude;
-    double currentLongitude;
-    Context context;
-    LocInterface li;
-    boolean result = false;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+    private double currentLatitude;
+    private double currentLongitude;
+    private final Context context;
+    private final LocInterface locInterface;
 
-    public GetLocation(Context context) {
+    public GLocation(Context context) {
         this.context = context;
-        this.li = (LocInterface) context;
+        this.locInterface = (LocInterface) context;
     }
 
     public void callForLocation() {
-        mLocationRequest = LocationRequest.create()
+        locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
                 .setInterval(10 * 1000)
-                .setFastestInterval(1 * 1000);
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .setFastestInterval(1000);
+        googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
+
+            googleApiClient.connect();
+    }
+
+    private boolean checkPermission() {
+        if (EasyPermissions.hasPermissions(context, Constants.PERMISSIONS_REQ)) {
+            return true;
+        } else {
+            EasyPermissions.requestPermissions((Activity)context,"Allow application to access Location?", Constants.LOCATION_CODE, Constants.PERMISSIONS_REQ);
+           return false;
+        }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        result = Permission.Utility.checkPermission(context, Manifest.permission.ACCESS_FINE_LOCATION, Constants.LocationCode, "GetLocation permission is necessary");
-        if (result) {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (checkPermission()) {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (location == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
             } else {
                 currentLatitude = location.getLatitude();
                 currentLongitude = location.getLongitude();
-                li.location(currentLatitude, currentLongitude);
+                locInterface.getLocation(currentLatitude, currentLongitude);
             }
         }
     }
@@ -73,7 +82,7 @@ public class GetLocation implements GoogleApiClient.ConnectionCallbacks,
                 e.printStackTrace();
             }
         } else {
-            Log.e("Error", "GetLocation services connection failed with code " + connectionResult.getErrorCode());
+            Log.e("Error", "GLocation services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 
@@ -81,7 +90,7 @@ public class GetLocation implements GoogleApiClient.ConnectionCallbacks,
     public void onLocationChanged(android.location.Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
-        li.location(currentLatitude, currentLongitude);
+        locInterface.getLocation(currentLatitude, currentLongitude);
     }
 
 }
