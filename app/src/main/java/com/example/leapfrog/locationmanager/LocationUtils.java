@@ -15,7 +15,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class GLocation implements GoogleApiClient.ConnectionCallbacks,
+public class LocationUtils implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     private GoogleApiClient googleApiClient;
@@ -25,7 +25,7 @@ public class GLocation implements GoogleApiClient.ConnectionCallbacks,
     private final Context context;
     private final LocInterface locInterface;
 
-    public GLocation(Context context) {
+    public LocationUtils(Context context) {
         this.context = context;
         this.locInterface = (LocInterface) context;
     }
@@ -82,7 +82,7 @@ public class GLocation implements GoogleApiClient.ConnectionCallbacks,
                 e.printStackTrace();
             }
         } else {
-            Log.e("Error", "GLocation services connection failed with code " + connectionResult.getErrorCode());
+            Log.e("Error", "LocationUtils services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 

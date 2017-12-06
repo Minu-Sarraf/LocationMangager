@@ -17,7 +17,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, LocInterface, View.OnClickListener {
 
-    private GLocation l;
+    private LocationUtils l;
 
     @BindView(R.id.button)
     Button btn;
@@ -28,9 +28,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         btn.setOnClickListener(this);
-        l = new GLocation(this);
+        l = new LocationUtils(this);
     }
-
 
     @Override
     public void getLocation(double lat, double lon) {
@@ -42,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public void onClick(View view) {
         l.callForLocation();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
@@ -66,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     .setRequestCode(Constants.LOCATION_CODE)
                     .build()
                     .show();
-
     }
 
 }
