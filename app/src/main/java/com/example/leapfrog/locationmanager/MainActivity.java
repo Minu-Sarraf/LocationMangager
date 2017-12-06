@@ -3,7 +3,6 @@ package com.example.leapfrog.locationmanager;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,25 +26,13 @@ public class MainActivity extends AppCompatActivity implements LocInterface, Vie
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case Constants.LocationCode : {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     GetLocation l = new GetLocation(MainActivity.this);
                     l.callForLocation();
-                } else {
-                }
+                } 
                 return;
             }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -55,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements LocInterface, Vie
 
     @Override
     public void onClick(View view) {
-        GetLocation l = new GetLocation(MainActivity.this);
+        GetLocation l = new GetLocation(this);
         l.callForLocation();
     }
 
